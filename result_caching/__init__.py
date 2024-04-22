@@ -463,5 +463,17 @@ def get_calling_function():
 cache = _MemoryStorage
 store = _DiskStorage
 store_dict = _DictStorage
-store_xarray = _XarrayStorage
+# store_xarray = _XarrayStorage
 store_netcdf = _NetcdfStorage
+
+
+class _NotCachedXarrayStorage(_XarrayStorage):
+
+    def __call__(self, function):
+      @wraps(function)
+      def wrapper(*args, **kwargs):
+        return function(*args, **kwargs)
+      return wrapper
+
+
+store_xarray = _NotCachedXarrayStorage
